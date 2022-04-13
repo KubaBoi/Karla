@@ -1,5 +1,5 @@
 
-class Equal:
+class Stringer:
 
     @staticmethod
     def starts(text, listOfPosibilities):
@@ -20,4 +20,11 @@ class Equal:
         for l in listOfPosibilities:
             if (text.find(l) >= 0):
                 return l
+        return False
+
+    @staticmethod
+    def accept(text, type=False):
+        if (text == "yes" or
+            text == "yeah"):
+            return True
         return False

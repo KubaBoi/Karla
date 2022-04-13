@@ -7,7 +7,7 @@ import subprocess
 from cheese.resourceManager import ResMan
 from cheese.Logger import Logger
 
-from python.commands.tools.equal import Equal
+from python.commands.tools.stringer import Stringer
 
 class Session:
 
@@ -21,7 +21,7 @@ class Session:
         commands = self.loadCommands()
 
         for command in commands:
-            starter = Equal.starts(text, command["starters"])
+            starter = Stringer.starts(text, command["starters"])
             if (starter):
                 
                 textArray = text.split(" ")
