@@ -4,6 +4,8 @@
 from cheese.ErrorCodes import Error
 from cheese.modules.cheeseController import CheeseController as cc
 
+from python.sessions.sessionManager import SessionManager
+
 #@controller /understand
 class UnderstandController(cc):
 
@@ -23,6 +25,8 @@ class UnderstandController(cc):
 		text = args["TEXT"]
 		pindex = args["PINDEX"]
 
-		response = cc.createResponse({'TEXT': 'str', 'DONE': True, 'PINDEX': 0}, 200)
+		answer, done = SessionManager.doSession(text, pindex)
+
+		response = cc.createResponse({'TEXT': answer, 'DONE': done, 'PINDEX': pindex}, 200)
 		cc.sendResponse(server, response)
 

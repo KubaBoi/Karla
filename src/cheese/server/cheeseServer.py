@@ -99,6 +99,8 @@ class CheeseHandler(BaseHTTPRequestHandler):
             elif (self.path.startswith("/recognition")):
                 if (self.path.startswith("/recognition/fromWav")):
                     RecognitionController.fromWav(self, self.path, auth)
+                elif (self.path.startswith("/recognition/toMp3")):
+                    RecognitionController.toMp3(self, self.path, auth)
                 else:
                     Error.sendCustomError(self, "Endpoint not found :(", 404)
             elif (self.path.startswith("/understand")):

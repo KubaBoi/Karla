@@ -1,0 +1,19 @@
+{
+    "COMMANDS": [
+        {
+            "name": "timer",
+            "fazes": 1,
+            "ending": "minutes",
+            "starters": [
+                "set timer",
+                "set a timer",
+                "set the timer",
+                "set timer for",
+                "set a timer for",
+                "set the timer for",
+                "timer",
+                "timer for"
+            ]
+        }
+    ]
+}
