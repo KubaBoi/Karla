@@ -25,7 +25,7 @@ class UnderstandController(cc):
 		text = args["TEXT"]
 		pindex = args["PINDEX"]
 
-		answer, done = SessionManager.doSession(text, pindex)
+		answer, done, pindex = SessionManager.doSession(text, pindex)
 
 		response = cc.createResponse({'TEXT': answer, 'DONE': done, 'PINDEX': pindex}, 200)
 		cc.sendResponse(server, response)

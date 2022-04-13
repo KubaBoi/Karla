@@ -1,9 +1,13 @@
+from ast import Eq
 import os
 import platform
 import json
 import subprocess
 
 from cheese.resourceManager import ResMan
+from cheese.Logger import Logger
+
+from python.commands.tools.equal import Equal
 
 class Session:
 
@@ -17,13 +21,18 @@ class Session:
         commands = self.loadCommands()
 
         for command in commands:
-            for starter in command["starters"]:
-                if (text.startswith(starter)):
-                    textArray = text.split(" ")
-                    if (len(textArray) == len(starter.split(" ")) + len(command["ending"].split(" ")) + 1):
-                        self.command = command
-                        self.fazeCount = command["fazes"]
-                        return text.replace(starter, "").replace(command["ending"], "").strip()
+            starter = Equal.starts(text, command["starters"])
+            if (starter):
+                
+                textArray = text.split(" ")
+                fullText = " ".join([starter, command["ending"]]).strip()
+                if (len(textArray) == len(fullText.split(" "))):
+                    self.command = command
+                    self.fazeCount = command["fazes"]
+                    newText = text.replace(starter, "").replace(command["ending"].replace("&", "").strip(), "").strip()
+                    if (not newText):
+                        return "data"
+                    return newText
         return False
 
     def loadCommands(self):
@@ -36,6 +45,7 @@ class Session:
             python = "python3"
 
         command = f"{python} \"{os.path.join(ResMan.pythonSrc(), 'commands', self.command['name'])}.py\" --faze {self.faze} --data \"{text}\""
+        Logger.info(command, silence=False)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
         resp, err = p.communicate()
 

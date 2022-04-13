@@ -11,7 +11,7 @@ class SessionManager:
             session = Session()
             text = session.createSession(text)
             if (not text):
-                return "I did not catch that"
+                return "I did not catch that", False, -1
             
             pindex = len(SessionManager.sessions)
             session.index = pindex
@@ -23,8 +23,8 @@ class SessionManager:
 
                 if (ses.isDone()):
                     SessionManager.sessions.remove(ses)
-                    return ret, True
-                return ret, False
+                    return ret, True, pindex
+                return ret, False, pindex
 
-        return "I did not catch that", False
+        return "I did not catch that", False, pindex
         

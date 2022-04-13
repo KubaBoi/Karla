@@ -3,7 +3,7 @@
         {
             "name": "timer",
             "fazes": 1,
-            "ending": "minutes",
+            "ending": "& minutes",
             "starters": [
                 "set timer",
                 "set a timer",
@@ -13,6 +13,19 @@
                 "set the timer for",
                 "timer",
                 "timer for"
+            ]
+        },
+        {
+            "name": "weather",
+            "fazes": 1,
+            "ending": "",
+            "starters": [
+                "weather",
+                "the weather",
+                "the weather is",
+                "what weather is",
+                "what is the weather",
+                "what's the weather"
             ]
         }
     ]
