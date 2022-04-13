@@ -36,14 +36,13 @@ class Session:
             python = "python3"
 
         command = f"{python} \"{os.path.join(ResMan.pythonSrc(), 'commands', self.command['name'])}.py\" --faze {self.faze} --data \"{text}\""
-        print(command)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
         resp, err = p.communicate()
 
         if (not resp.decode("utf-8").startswith("&")):
             self.faze += 1
         
-        return resp
+        return resp.decode("utf-8")
 
     def isDone(self):
-        return self.fazeCount > self.faze
+        return self.fazeCount >= self.faze
