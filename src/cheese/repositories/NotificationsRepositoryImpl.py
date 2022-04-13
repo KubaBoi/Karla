@@ -4,7 +4,7 @@
 
 from cheese.databaseControll.database import Database
 from cheese.Logger import Logger
-from python.models.Notifications import Notifications
+from python.models.notifications import Notifications
 
 
 class NotificationsRepositoryImpl:

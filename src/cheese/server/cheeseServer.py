@@ -14,7 +14,9 @@ from cheese.ErrorCodes import Error
 from python.authorization import Authorization
 
 #REST CONTROLLERS
-from python.controllers.NotificationsController import NotificationsController
+from python.controllers.notificationsController import NotificationsController
+from python.controllers.recognitionController import RecognitionController
+from python.controllers.understandController import UnderstandController
 
 
 """
@@ -40,7 +42,10 @@ class CheeseHandler(BaseHTTPRequestHandler):
             return
         try:
             path = CheeseController.getPath(self.path)
-            auth = None
+            auth = Authorization.authorize(self, path, "GET")
+            if (auth == -1): 
+                CheeseController.sendResponse(self, Error.BadToken)
+                return
 
             if (path == "/"):
                 CheeseController.serveFile(self, "index.html")
@@ -49,11 +54,21 @@ class CheeseHandler(BaseHTTPRequestHandler):
                     NotificationsController.get(self, self.path, auth)
                 elif (path.startswith("/notifications/getAll")):
                     NotificationsController.getAll(self, self.path, auth)
+                elif (path.startswith("/notifications/getByRepeat")):
+                    NotificationsController.getByRepeat(self, self.path, auth)
+                elif (path.startswith("/notifications/getByDescription")):
+                    NotificationsController.getByDescription(self, self.path, auth)
+                elif (path.startswith("/notifications/check")):
+                    NotificationsController.check(self, self.path, auth)
                 else:
                     if (self.path.endswith(".css")):
                         CheeseController.serveFile(self, self.path, "text/css")
                     else:
                         CheeseController.serveFile(self, self.path)
+            elif (path.startswith("/recognition")):
+                pass
+            elif (path.startswith("/understand")):
+                pass
             else:
                 if (self.path.endswith(".css")):
                     CheeseController.serveFile(self, self.path, "text/css")
@@ -67,7 +82,10 @@ class CheeseHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         self.__log()
         try:
-            auth = None
+            auth = Authorization.authorize(self, self.path, "POST")
+            if (auth == -1): 
+                CheeseController.sendResponse(self, Error.BadToken)
+                return
 
             if (self.path.startswith("/notifications")):
                 if (self.path.startswith("/notifications/create")):
@@ -76,6 +94,16 @@ class CheeseHandler(BaseHTTPRequestHandler):
                     NotificationsController.update(self, self.path, auth)
                 elif (self.path.startswith("/notifications/delete")):
                     NotificationsController.delete(self, self.path, auth)
+                else:
+                    Error.sendCustomError(self, "Endpoint not found :(", 404)
+            elif (self.path.startswith("/recognition")):
+                if (self.path.startswith("/recognition/fromWav")):
+                    RecognitionController.fromWav(self, self.path, auth)
+                else:
+                    Error.sendCustomError(self, "Endpoint not found :(", 404)
+            elif (self.path.startswith("/understand")):
+                if (self.path.startswith("/understand/text")):
+                    UnderstandController.text(self, self.path, auth)
                 else:
                     Error.sendCustomError(self, "Endpoint not found :(", 404)
             else:

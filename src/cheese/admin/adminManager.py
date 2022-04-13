@@ -159,7 +159,7 @@ class AdminManager:
     def __update(server):
         Logger.warning(20*"=", allowHeader=False, silence=False)
         Logger.warning("Updating from git", allowHeader=False, silence=False)
-        subprocess.call("git pull")
+        subprocess.call(f"cd {ResMan.root()}; git pull", shell=True)
         Logger.warning("Project has been updated. Restart to apply changes.", allowHeader=False, silence=False)
         response = CheeseController.createResponse({"RESPONSE": "OK"}, 200)
         CheeseController.sendResponse(server, response)

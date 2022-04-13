@@ -8,7 +8,7 @@ from cheese.resourceManager import ResMan
 from cheese.databaseControll.database import Database
 
 #REPOSITORIES
-from cheese.repositories.NotificationsRepositoryImpl import NotificationsRepositoryImpl
+from cheese.repositories.notificationsRepositoryImpl import NotificationsRepositoryImpl
 
 
 """
@@ -24,28 +24,28 @@ class CheeseRepository:
         userRepository = CheeseRepository.findUserRepository()
         args = CheeseRepository.getTypeOf(args)
 
-        if (userRepository == "NotificationsRepository"):
+        if (userRepository == "notificationsRepository"):
             return NotificationsRepositoryImpl.findAll(args)
     @staticmethod
     def find(args):
         userRepository = CheeseRepository.findUserRepository()
         args = CheeseRepository.getTypeOf(args)
 
-        if (userRepository == "NotificationsRepository"):
+        if (userRepository == "notificationsRepository"):
             return NotificationsRepositoryImpl.find(args)
     @staticmethod
     def findBy(args):
         userRepository = CheeseRepository.findUserRepository()
         args = CheeseRepository.getTypeOf(args)
 
-        if (userRepository == "NotificationsRepository"):
+        if (userRepository == "notificationsRepository"):
             return NotificationsRepositoryImpl.findBy(args)
     @staticmethod
     def findNewId(args):
         userRepository = CheeseRepository.findUserRepository()
         args = CheeseRepository.getTypeOf(args)
 
-        if (userRepository == "NotificationsRepository"):
+        if (userRepository == "notificationsRepository"):
             return NotificationsRepositoryImpl.findNewId(args)
 
 
@@ -53,19 +53,19 @@ class CheeseRepository:
     def save(args):
         userRepository = CheeseRepository.findUserRepository()
 
-        if (userRepository == "NotificationsRepository"):
+        if (userRepository == "notificationsRepository"):
             return NotificationsRepositoryImpl.save(args)
     @staticmethod
     def update(args):
         userRepository = CheeseRepository.findUserRepository()
 
-        if (userRepository == "NotificationsRepository"):
+        if (userRepository == "notificationsRepository"):
             return NotificationsRepositoryImpl.update(args)
     @staticmethod
     def delete(args):
         userRepository = CheeseRepository.findUserRepository()
 
-        if (userRepository == "NotificationsRepository"):
+        if (userRepository == "notificationsRepository"):
             return NotificationsRepositoryImpl.delete(args)
 
 

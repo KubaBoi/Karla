@@ -15,7 +15,7 @@ class NotificationsController(cc):
 	@staticmethod
 	def create(server, path, auth):
 		if (auth["role"] > 1):
-			Error.sendCustomError(server, "Unauthorized access", 400)
+			Error.sendCustomError(server, "Unauthorized access", 401)
 			return
 
 		args = cc.readArgs(server)
@@ -43,7 +43,7 @@ class NotificationsController(cc):
 	@staticmethod
 	def get(server, path, auth):
 		if (auth["role"] > 1):
-			Error.sendCustomError(server, "Unauthorized access", 400)
+			Error.sendCustomError(server, "Unauthorized access", 401)
 			return
 
 		args = cc.getArgs(path)
@@ -65,7 +65,7 @@ class NotificationsController(cc):
 	@staticmethod
 	def getAll(server, path, auth):
 		if (auth["role"] > 1):
-			Error.sendCustomError(server, "Unauthorized access", 400)
+			Error.sendCustomError(server, "Unauthorized access", 401)
 			return
 
 		notificationsArray = NotificationsRepository.findAll()
@@ -81,7 +81,7 @@ class NotificationsController(cc):
 	@staticmethod
 	def update(server, path, auth):
 		if (auth["role"] > 1):
-			Error.sendCustomError(server, "Unauthorized access", 400)
+			Error.sendCustomError(server, "Unauthorized access", 401)
 			return
 
 		args = cc.readArgs(server)
@@ -109,7 +109,7 @@ class NotificationsController(cc):
 	@staticmethod
 	def delete(server, path, auth):
 		if (auth["role"] > 1):
-			Error.sendCustomError(server, "Unauthorized access", 400)
+			Error.sendCustomError(server, "Unauthorized access", 401)
 			return
 
 		args = cc.readArgs(server)
@@ -130,7 +130,7 @@ class NotificationsController(cc):
 	@staticmethod
 	def getByRepeat(server, path, auth):
 		if (auth["role"] > 1):
-			Error.sendCustomError(server, "Unauthorized access", 400)
+			Error.sendCustomError(server, "Unauthorized access", 401)
 			return
 
 		args = cc.getArgs(path)
@@ -154,7 +154,7 @@ class NotificationsController(cc):
 	@staticmethod
 	def getByDescription(server, path, auth):
 		if (auth["role"] > 1):
-			Error.sendCustomError(server, "Unauthorized access", 400)
+			Error.sendCustomError(server, "Unauthorized access", 401)
 			return
 
 		args = cc.getArgs(path)
@@ -173,4 +173,9 @@ class NotificationsController(cc):
 
 		response = cc.createResponse(jsonResponse, 200)
 		cc.sendResponse(server, response)
+
+	#@get /check
+	@staticmethod
+	def check(server, path, auth):
+		pass
 

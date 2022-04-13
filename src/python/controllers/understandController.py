@@ -4,10 +4,6 @@
 from cheese.ErrorCodes import Error
 from cheese.modules.cheeseController import CheeseController as cc
 
-from python.repositories.understandRepository import UnderstandRepository
-
-from python.models.understand import Understand
-
 #@controller /understand
 class UnderstandController(cc):
 
