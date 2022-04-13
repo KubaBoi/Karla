@@ -16,26 +16,27 @@
 			<li>
 				<a href="#1">/notifications</a>
 				<ol>
-					<li><a href="#1.1">/create</a>
-					<li><a href="#1.2">/get</a>
-					<li><a href="#1.3">/getAll</a>
-					<li><a href="#1.4">/update</a>
-					<li><a href="#1.5">/delete</a>
-					<li><a href="#1.6">/getByRepeat</a>
-					<li><a href="#1.7">/getByDescription</a>
+					<li><a href="#1.1">/create</a></li>
+					<li><a href="#1.2">/get</a></li>
+					<li><a href="#1.3">/getAll</a></li>
+					<li><a href="#1.4">/update</a></li>
+					<li><a href="#1.5">/delete</a></li>
+					<li><a href="#1.6">/getByRepeat</a></li>
+					<li><a href="#1.7">/getByDescription</a></li>
 					<li><a href="#1.8">/check</a></li>
 				</ol>
 			</li>
 			<li>
 				<a href="#2">/recognition</a>
 				<ol>
-					<li><a href="#2.1">/fromWav</a>
+					<li><a href="#2.1">/fromWav</a></li>
+					<li><a href="#2.2">/toMp3</a></li>	
 				</ol>
 			</li>
 			<li>
 				<a href="#3">/understand</a>
 				<ol>
-					<li><a href="#3.1">/text</a>
+					<li><a href="#3.1">/text</a></li>
 				</ol>
 			</li>
 		</ol>
@@ -374,6 +375,34 @@ Accepts bytes						</code></pre></figure>
 						<pre><code class="language-json">
 {  
 	"ERROR": "No bytes in request"
+}						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{  
+	"ERROR": "Unauthorized access"
+}						</code></pre></figure>
+				</li>
+
+				<li class="num">
+					<span class="hd3" id="2.1">/fromWav - POST</span>
+					<p>Accepts text and returns .mp3 file from it</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts bytes</figcaption>
+						<pre><code class="language-json">
+{  
+	"TEXT": "str"
+}					</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+MP3 file						</code></pre></figure>
+					<figure>
+						<figcaption>Return Bad Request - 400:</figcaption>
+						<pre><code class="language-json">
+{  
+	"ERROR": "Wrong json structure"
 }						</code></pre></figure>
 					<figure>
 						<figcaption>Return Unauthorized - 401:</figcaption>
