@@ -102,7 +102,7 @@ class RecognitionController(cc):
 			print(command)
 			subprocess.call(command, shell=False)
 		else:
-			command = (f'ffmpeg -i {pathToFileMp3} {pathToFile}')
+			command = (f'ffmpeg -i .{pathToFileMp3} .{pathToFile}')
 			print(command)
 			subprocess.call(command)
 
