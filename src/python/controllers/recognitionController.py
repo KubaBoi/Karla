@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
+import time
 import subprocess
 import platform
 #recognition
@@ -105,7 +106,7 @@ class RecognitionController(cc):
 			command = ["ffmpeg", "-i", pathToFileMp3, pathToFile]
 			print(command)
 			subprocess.Popen(command)
-
+		time.sleep(100)
 		return pathToFile
 
 	@staticmethod
