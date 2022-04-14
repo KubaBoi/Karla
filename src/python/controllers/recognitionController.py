@@ -106,7 +106,6 @@ class RecognitionController(cc):
 			print(command)
 			subprocess.Popen(command)
 
-		os.remove(pathToFileMp3)
 		return pathToFile
 
 	@staticmethod
@@ -118,6 +117,7 @@ class RecognitionController(cc):
 			audio = r.record(source)
 
 		os.remove(fileName)
+		os.remove(fileName.replace(".wav", ".mp3"))
 		try:
 			return r.recognize_google(audio).lower()
 		except:
