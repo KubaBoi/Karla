@@ -106,7 +106,7 @@ class RecognitionController(cc):
 			command = ["ffmpeg", "-i", pathToFileMp3, pathToFile]
 			print(command)
 			subprocess.Popen(command)
-		time.sleep(100)
+		time.sleep(0.1)
 		return pathToFile
 
 	@staticmethod
