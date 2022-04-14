@@ -186,7 +186,7 @@ class NotificationsController(cc):
 		jsonArray = []
 		for notif in notifications:
 			jsonArray.append(notif.toJson())
-			#NotificationsRepository.delete(notif)
+			NotificationsRepository.delete(notif)
 
 		response = cc.createResponse({"NOTIFICATIONS": jsonArray}, 200)
 		cc.sendResponse(server, response)

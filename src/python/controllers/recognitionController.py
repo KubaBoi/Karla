@@ -43,7 +43,7 @@ class RecognitionController(cc):
 		Logger.info(f"I am saying: {answer}")
 
 		if (answer == ""):
-			Error.sendCustomError(server, "Karla did not hear anything", 418)
+			Error.sendCustomError(server, "Karla did not hear anything", 500)
 			return
 
 		data = RecognitionController.createMp3(answer)

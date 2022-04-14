@@ -17,6 +17,9 @@ class SessionManager:
             return ""
             
         if (session.command == None):
+            if (text.startswith("nothing")):
+                SessionManager.sessions.remove(session)
+                return "I am ending this session"
             text = session.findCommand(text)
             if (not text):
                 return "I did not catch that"

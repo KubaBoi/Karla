@@ -13,7 +13,7 @@ args.getArguments()
 request = {
     "END_TIME": datetime.now() + timedelta(minutes=int(args.data)),
     "REPEAT": -1,
-    "DESCRIPTION": "TIMER"
+    "DESCRIPTION": f"TIMER for {args.data} minutes is done crcrcr"
 }
 
 r = requests.post("http://localhost:8004/notifications/create", data=json.dumps(request, indent=4, sort_keys=True, default=str))
