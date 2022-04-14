@@ -102,8 +102,9 @@ class RecognitionController(cc):
 			print(command)
 			subprocess.call(command, shell=False)
 		else:
-			sound = AudioSegment.from_mp3(pathToFileMp3)
-			sound.export(pathToFile, format="wav")
+			command = (f'ffmpeg -i "{pathToFileMp3}" "{pathToFile}"')
+			print(command)
+			subprocess.call(command)
 
 		os.remove(pathToFileMp3)
 		return pathToFile
