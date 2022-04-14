@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS public.notifications
 (
     id bigint NOT NULL,
     description text NOT NULL,
-    end_time time with time zone NOT NULL,
+    end_time timestamp with time zone NOT NULL,
     repeat bigint NOT NULL,
     PRIMARY KEY (id)
 );

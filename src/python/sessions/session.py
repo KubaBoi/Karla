@@ -11,28 +11,37 @@ from python.commands.tools.stringer import Stringer
 
 class Session:
 
-    def __init__(self):
+    def __init__(self, ip):
         self.fazeCount = 0
         self.faze = 0
-        self.index = 0
-        self.command = {}
+        self.ip = ip
+        self.command = None
 
+    # wakes Karla up
     def createSession(self, text):
         commands = self.loadCommands()
 
-        for command in commands:
-            starter = Stringer.starts(text, command["starters"])
-            if (starter):
+        starter = Stringer.starts(text, commands[0]["starters"])
+        if (starter):
+            return True
+        return False
+
+    def findCommand(self, text):
+        commands = self.loadCommands()
+        print(text)
+
+        for command in commands[1:]:
+            if (Stringer.starts(text, command["starters"]) and Stringer.ends(text, [command["ending"].replace("& ", "")])):
                 
-                textArray = text.split(" ")
-                fullText = " ".join([starter, command["ending"]]).strip()
-                if (len(textArray) == len(fullText.split(" "))):
-                    self.command = command
-                    self.fazeCount = command["fazes"]
-                    newText = text.replace(starter, "").replace(command["ending"].replace("&", "").strip(), "").strip()
-                    if (not newText):
+                for starter in command["starters"]:
+                    textArray = text.split(" ")
+                    fullText = " ".join([starter, command["ending"]]).strip()
+                    if (len(textArray) == len(fullText.split(" "))):
+                        self.command = command
+                        self.fazeCount = command["fazes"]
+                        if (command["ending"].find("&") != -1):
+                            return textArray[len(starter.split(" "))]
                         return "data"
-                    return newText
         return False
 
     def loadCommands(self):

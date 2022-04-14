@@ -1,15 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import os
-import requests
+import subprocess
+import platform
 #recognition
 import speech_recognition as sr
 #speak
 from gtts import gTTS
 
+from pydub import AudioSegment
+
 from cheese.ErrorCodes import Error
+from cheese.Logger import Logger
 from cheese.resourceManager import ResMan
 from cheese.modules.cheeseController import CheeseController as cc
+
+from python.sessions.sessionManager import SessionManager
 
 #@controller /recognition
 class RecognitionController(cc):
@@ -27,27 +33,22 @@ class RecognitionController(cc):
 			Error.sendCustomError(server, "No bytes in request", 400)
 			return
 
-		pathToFile = RecognitionController.findRecordingName()
+		ip = cc.getClientAddress(server)
+		pathToFile = RecognitionController.saveMp3(args)
 
-		with open(pathToFile, "wb") as f:
-			f.write(args)
+		text = RecognitionController.recognize(pathToFile)
+		Logger.info(f"I have heard: {text}")
 
-		r = sr.Recognizer()
+		answer = SessionManager.doSession(text, ip)
+		Logger.info(f"I am saying: {answer}")
 
-		file = sr.AudioFile(pathToFile)
-		with file as source:
-			audio = r.record(source)
-		try:
-			text = r.recognize_google(audio).lower()
-		except:
-			response = cc.createResponse({'TEXT': "I did not understand"}, 204)
-			cc.sendResponse(server, response)
-			os.remove(pathToFile)
+		if (answer == ""):
+			Error.sendCustomError(server, "Karla did not hear anything", 418)
 			return
 
-		os.remove(pathToFile)
-		response = cc.createResponse({'TEXT': text}, 200)
-		cc.sendResponse(server, response)
+		data = RecognitionController.createMp3(answer)
+
+		cc.sendResponse(server, (data, 200))
 
 	#@post /toMp3
 	@staticmethod
@@ -86,4 +87,52 @@ class RecognitionController(cc):
 			fileName = recording + str(index) + ".wav"
 
 		return os.path.join(ResMan.web(), "recordings", fileName)
+
+	@staticmethod
+	def saveMp3(bytes):
+		pathToFile = RecognitionController.findRecordingName()
+		pathToFileMp3 = pathToFile.replace(".wav", ".mp3").replace("\\", "/")
+
+		with open(pathToFileMp3, "wb") as f:
+			f.write(bytes)
+
+		if (platform.system() == "Windows"):
+			command = (os.path.join(ResMan.resources(), "ffmpeg", "bin", "ffmpeg") +
+						f' -i "{pathToFileMp3}" "{pathToFile}"')
+			print(command)
+			subprocess.call(command, shell=False)
+		else:
+			sound = AudioSegment.from_mp3(pathToFileMp3)
+			sound.export(pathToFile, format="wav")
+
+		os.remove(pathToFileMp3)
+		return pathToFile
+
+	@staticmethod
+	def recognize(fileName):
+		r = sr.Recognizer()
+
+		file = sr.AudioFile(fileName)
+		with file as source:
+			audio = r.record(source)
+
+		os.remove(fileName)
+		try:
+			return r.recognize_google(audio).lower()
+		except:
+			return ""
+
+	@staticmethod
+	def createMp3(text):
+		pathToFile = RecognitionController.findRecordingName().replace(".wav", ".mp3")
+
+		
+		tts = gTTS(text)
+		tts.save(pathToFile)
+
+		with open(pathToFile, "rb") as f:
+			data = f.read()
+
+		os.remove(pathToFile)
+		return data
 

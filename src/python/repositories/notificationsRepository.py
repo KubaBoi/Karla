@@ -8,6 +8,11 @@ from cheese.modules.cheeseRepository import CheeseRepository
 #@dbmodel Notifications
 class NotificationsRepository(CheeseRepository):
 
+	#@query "select * from notifications where end_time <= now();"
+	#@return array
+	@staticmethod
+	def findPassedNotifications():
+		return CheeseRepository.findPassedNotifications([])
 
 
 	#@query "select * from notifications;"

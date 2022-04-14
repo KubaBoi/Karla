@@ -20,6 +20,13 @@ Database query of Cheese Application
 class CheeseRepository:
 
     @staticmethod
+    def findPassedNotifications(args):
+        userRepository = CheeseRepository.findUserRepository()
+        args = CheeseRepository.getTypeOf(args)
+
+        if (userRepository == "notificationsRepository"):
+            return NotificationsRepositoryImpl.findPassedNotifications(args)
+    @staticmethod
     def findAll(args):
         userRepository = CheeseRepository.findUserRepository()
         args = CheeseRepository.getTypeOf(args)

@@ -177,5 +177,17 @@ class NotificationsController(cc):
 	#@get /check
 	@staticmethod
 	def check(server, path, auth):
-		pass
+		if (auth["role"] > 1):
+			Error.sendCustomError(server, "Unauthorized access", 401)
+			return
+
+		notifications = NotificationsRepository.findPassedNotifications()
+
+		jsonArray = []
+		for notif in notifications:
+			jsonArray.append(notif.toJson())
+			#NotificationsRepository.delete(notif)
+
+		response = cc.createResponse({"NOTIFICATIONS": jsonArray}, 200)
+		cc.sendResponse(server, response)
 

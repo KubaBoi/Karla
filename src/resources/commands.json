@@ -1,6 +1,15 @@
 {
     "COMMANDS": [
         {
+            "name": "starter",
+            "fazes": 1,
+            "ending": "",
+            "starters": [
+                "hey karla",
+                "hello"
+            ]
+        },
+        {
             "name": "timer",
             "fazes": 1,
             "ending": "& minutes",

@@ -54,6 +54,23 @@ class NotificationsRepositoryImpl:
         return tuple
 
     @staticmethod
+    def findPassedNotifications(args):
+
+        response = None
+        try:
+            db = Database()
+            response = db.query(f"select {NotificationsRepositoryImpl.schemeNoBrackets} from notifications where end_time <= now();")
+            db.done()
+        except Exception as e:
+            Logger.fail("An error occurred while query request", str(e))
+
+        if (response == None): return response
+        resp = []
+        for a in response:
+            resp.append(NotificationsRepositoryImpl.toModel(a))
+        return resp
+
+    @staticmethod
     def findAll(args):
 
         response = None

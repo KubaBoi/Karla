@@ -18,15 +18,15 @@ class UnderstandController(cc):
 
 		args = cc.readArgs(server)
 
-		if (not cc.validateJson(['TEXT', 'PINDEX'], args)):
+		if (not cc.validateJson(['TEXT'], args)):
 			Error.sendCustomError(server, "Wrong json structure", 400)
 			return
 
 		text = args["TEXT"]
-		pindex = args["PINDEX"]
+		clientIp = cc.getClientAddress(server)
 
-		answer, done, pindex = SessionManager.doSession(text, pindex)
+		answer = SessionManager.doSession(text, clientIp)
 
-		response = cc.createResponse({'TEXT': answer, 'DONE': done, 'PINDEX': pindex}, 200)
+		response = cc.createResponse({'TEXT': answer}, 200)
 		cc.sendResponse(server, response)
 

@@ -6,25 +6,31 @@ class SessionManager:
     sessions = []
 
     @staticmethod
-    def doSession(text, pindex):
-        if (pindex == -1):
-            session = Session()
+    def doSession(text, ip):
+        session = SessionManager.activeSession(ip)
+        if (not session):
+            session = Session(ip)
             text = session.createSession(text)
-            if (not text):
-                return "I did not catch that", False, -1
+            if (text):
+                SessionManager.sessions.append(session)
+                return "What do you need"
+            return ""
             
-            pindex = len(SessionManager.sessions)
-            session.index = pindex
-            SessionManager.sessions.append(session)
+        if (session.command == None):
+            text = session.findCommand(text)
+            if (not text):
+                return "I did not catch that"
 
-        for ses in SessionManager.sessions:
-            if (ses.index == pindex):
-                ret = ses.doCommand(text)
+        ret = session.doCommand(text)
 
-                if (ses.isDone()):
-                    SessionManager.sessions.remove(ses)
-                    return ret, True, pindex
-                return ret, False, pindex
+        if (session.isDone()):
+            SessionManager.sessions.remove(session)
+        return ret
 
-        return "I did not catch that", False, pindex
+    @staticmethod
+    def activeSession(ip):
+        for session in SessionManager.sessions:
+            if (session.ip == ip):
+                return session
+        return False
         
