@@ -1,0 +1,470 @@
+<html lang="cs">
+<head>
+	<meta charset='utf-8'>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://kubaboi.github.io/CheeseFramework/public/styles/style.css">
+	<link rel="stylesheet" href="https://kubaboi.github.io/CheeseFramework/public/styles/prism.css">
+	<link rel="icon" href="favicon.ico" type="image/x-icon">
+	<title>API - Karla</title>
+</head>
+<body>
+	<script src="https://kubaboi.github.io/CheeseFramework/public/scripts/prism.js"></script>
+
+	<div id="toc_container">
+		<p class="toc_title">Contents</p>
+		<ol>
+			<li>
+				<a href="#1">/notifications</a>
+				<ol>
+					<li><a href="#1.1">/create</a></li>
+					<li><a href="#1.2">/get</a></li>
+					<li><a href="#1.3">/getAll</a></li>
+					<li><a href="#1.4">/update</a></li>
+					<li><a href="#1.5">/delete</a></li>
+					<li><a href="#1.6">/getByRepeat</a></li>
+					<li><a href="#1.7">/getByDescription</a></li>
+					<li><a href="#1.8">/check</a></li>
+				</ol>
+			</li>
+			<li>
+				<a href="#2">/recognition</a>
+				<ol>
+					<li><a href="#2.1">/fromWav</a></li>
+					<li><a href="#2.2">/toMp3</a></li>	
+				</ol>
+			</li>
+			<li>
+				<a href="#3">/understand</a>
+				<ol>
+					<li><a href="#3.1">/text</a></li>
+				</ol>
+			</li>
+		</ol>
+	</div>
+
+
+	<ol class="num">
+		<li class="num">
+			<span class="hd2" id="1">/notifications</span>
+			<ol class="num">
+				<li class="num">
+					<span class="hd3" id="1.1">/create - POST</span>
+					<p>Creates a new notification</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts post body:</figcaption>
+						<pre><code class="language-json">
+{
+	"END_TIME": "time with time zone",
+	"REPEAT": 0,
+	"DESCRIPTION": "str"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+{
+	"STATUS": "notification has been created"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Bad request - 400:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Wrong json structure"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Unauthorized access"
+}
+						</code></pre></figure>
+				</li>
+
+				<li class="num">
+					<span class="hd3" id="1.2">/get - GET</span>
+					<p>Get notification by ID</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts path arguments:</figcaption>
+						<pre><code class="language-json">
+{
+	"ID": 0
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+{
+	"NOTIFICATION": {
+		"ID": 0,
+		"END_TIME": "time with time zone",
+		"REPEAT": 0,
+		"DESCRIPTION": "str"
+	}
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Bad request - 400:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Wrong json structure"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Unauthorized access"
+}
+						</code></pre></figure>
+				</li>
+
+				<li class="num">
+					<span class="hd3" id="1.3">/getAll - GET</span>
+					<p>Gets all notifications</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts nothing:</figcaption>
+						<pre><code class="language-json">
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+{
+	"NOTIFICATIONS": [
+		{
+			"ID": 0,
+			"END_TIME": "time with time zone",
+			"REPEAT": 0,
+			"DESCRIPTION": "str"
+		}
+	]
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Bad request - 400:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Wrong json structure"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Unauthorized access"
+}
+						</code></pre></figure>
+				</li>
+
+				<li class="num">
+					<span class="hd3" id="1.4">/update - POST</span>
+					<p>Updates notification</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts post body:</figcaption>
+						<pre><code class="language-json">
+{
+	"ID": 0,
+	"END_TIME": "time with time zone",
+	"REPEAT": 0,
+	"DESCRIPTION": "str"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+{
+	"STATUS": "notification has been updated"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Bad request - 400:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Wrong json structure"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Unauthorized access"
+}
+						</code></pre></figure>
+				</li>
+
+				<li class="num">
+					<span class="hd3" id="1.5">/delete - POST</span>
+					<p>Deletes notification</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts post body:</figcaption>
+						<pre><code class="language-json">
+{
+	"ID": 0
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+{
+	"STATUS": "notification has been deleted"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Bad request - 400:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Wrong json structure"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Unauthorized access"
+}
+						</code></pre></figure>
+				</li>
+
+				<li class="num">
+					<span class="hd3" id="1.6">/getByRepeat - GET</span>
+					<p>Gets all notifications by REPEAT</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts path arguments:</figcaption>
+						<pre><code class="language-json">
+{
+	"REPEAT": 0
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+{
+	"NOTIFICATIONS": [
+		{
+			"ID": 0,
+			"END_TIME": "time with time zone",
+			"REPEAT": 0,
+			"DESCRIPTION": "str"
+		}
+	]
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Bad request - 400:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Wrong json structure"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Unauthorized access"
+}
+						</code></pre></figure>
+				</li>
+
+				<li class="num">
+					<span class="hd3" id="1.7">/getByDescription - GET</span>
+					<p>Gets all notifications by DESCRIPTION</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts path arguments:</figcaption>
+						<pre><code class="language-json">
+{
+	"DESCRIPTION": "str"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+{
+	"NOTIFICATIONS": [
+		{
+			"ID": 0,
+			"END_TIME": "time with time zone",
+			"REPEAT": 0,
+			"DESCRIPTION": "str"
+		}
+	]
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Bad request - 400:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Wrong json structure"
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Unauthorized access"
+}
+						</code></pre></figure>
+				</li>
+
+				<li class="num">
+					<span class="hd3" id="1.8">/check - GET</span>
+					<p>Return if any notification is done</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts nothing:</figcaption>
+						<pre><code class="language-json">
+Nothing
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+{
+	"NOTIFICATIONS": [
+		{
+			"DESCRIPTION": "str"
+		}
+	]
+}
+						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{
+	"ERROR": "Unauthorized access"
+}
+						</code></pre></figure>
+				</li>
+
+
+			</ol>
+		</li>
+
+
+		<li class="num">
+			<span class="hd2" id="2">/recognition</span>
+			<ol class="num">
+				<li class="num">
+					<span class="hd3" id="2.1">/fromWav - POST</span>
+					<p>Accepts .wav file and return recognized text from it</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts bytes</figcaption>
+						<pre><code class="language-json">
+Accepts bytes						</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+{  
+	"TEXT": "str"
+}						</code></pre></figure>
+					<figure>
+						<figcaption>Return No Content - 204:</figcaption>
+						<pre><code class="language-json">
+{  
+	"TEXT": "I did not understand"
+}						</code></pre></figure>
+					<figure>
+						<figcaption>Return Bad Request - 400:</figcaption>
+						<pre><code class="language-json">
+{  
+	"ERROR": "No bytes in request"
+}						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{  
+	"ERROR": "Unauthorized access"
+}						</code></pre></figure>
+				</li>
+
+				<li class="num">
+					<span class="hd3" id="2.2">/toMp3 - POST</span>
+					<p>Accepts text and returns .mp3 file from it</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts post body</figcaption>
+						<pre><code class="language-json">
+{  
+	"TEXT": "str"
+}					</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+MP3 file						</code></pre></figure>
+					<figure>
+						<figcaption>Return Bad Request - 400:</figcaption>
+						<pre><code class="language-json">
+{  
+	"ERROR": "Wrong json structure"
+}						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{  
+	"ERROR": "Unauthorized access"
+}						</code></pre></figure>
+				</li>
+
+			</ol>
+		</li>
+
+
+		<li class="num">
+			<span class="hd2" id="3">/understand</span>
+			<ol class="num">
+				<li class="num">
+					<span class="hd3" id="3.1">/text - POST</span>
+					<p>Accepts TEXT and PINDEX and returns logicaly assumed answer.<br>PINDEX is index of session doing task. For first time it is -1.</p>
+					<p class="role">Role = 1</p>
+					<figure>
+						<figcaption>Accepts post body</figcaption>
+						<pre><code class="language-json">
+{  
+	"TEXT": "str",  
+	"PINDEX": 0
+}						</code></pre></figure>
+					<figure>
+						<figcaption>Return OK - 200:</figcaption>
+						<pre><code class="language-json">
+{  
+	"TEXT": "str",  
+	"DONE": true,  
+	"PINDEX": 0
+}						</code></pre></figure>
+					<figure>
+						<figcaption>Return No Content - 204:</figcaption>
+						<pre><code class="language-json">
+{  
+	"TEXT": "I did not catch that"
+}						</code></pre></figure>
+					<figure>
+						<figcaption>Return Bad Request - 400:</figcaption>
+						<pre><code class="language-json">
+{  
+	"ERROR": "Wrong json structure"
+}						</code></pre></figure>
+					<figure>
+						<figcaption>Return Unauthorized - 401:</figcaption>
+						<pre><code class="language-json">
+{  
+	"ERROR": "Unauthorized access"
+}						</code></pre></figure>
+				</li>
+
+			</ol>
+		</li>
+
+
+	</ol>
+
+
+
+</body>
+</html>

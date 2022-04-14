@@ -1,0 +1,52 @@
+{
+    "COMMANDS": [
+        {
+            "name": "starter",
+            "fazes": 1,
+            "ending": "",
+            "starters": [
+                "hey carla",
+                "hello",
+                "akala",
+                "a cuddle",
+                "agar.io",
+                "hey gardla",
+                "hair colour",
+                "adler",
+                "hey darling",
+                "carla",
+                "hey gal",
+                "a tablet",
+                "tablet"
+            ]
+        },
+        {
+            "name": "timer",
+            "fazes": 1,
+            "ending": "& minutes",
+            "starters": [
+                "set timer",
+                "set a timer",
+                "set the timer",
+                "set timer for",
+                "set a timer for",
+                "set the timer for",
+                "timer",
+                "timer for"
+            ]
+        },
+        {
+            "name": "weather",
+            "fazes": 1,
+            "ending": "",
+            "starters": [
+                "weather",
+                "the weather",
+                "the weather is",
+                "what weather is",
+                "what is the weather",
+                "what's the weather"
+            ]
+        }
+    ]
+}
