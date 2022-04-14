@@ -1,5 +1,0 @@
-__pycache__
-*.log
-*.pyc
-logs/*.log
-logs/*.html

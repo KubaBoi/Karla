@@ -1,4 +1,0 @@
-
-
-class CheeseModel:
-    pass
