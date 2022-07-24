@@ -11,28 +11,24 @@ from gtts import gTTS
 
 from pydub import AudioSegment
 
-from cheese.ErrorCodes import Error
-from cheese.Logger import Logger
-from cheese.resourceManager import ResMan
-from cheese.modules.cheeseController import CheeseController as cc
+from Cheese.ErrorCodes import Error
+from Cheese.Logger import Logger
+from Cheese.resourceManager import ResMan
+from Cheese.cheeseController import CheeseController as cc
+from Cheese.httpClientErrors import *
+from Cheese.httpServerError import *
 
-from python.sessions.sessionManager import SessionManager
+from src.sessions.sessionManager import SessionManager
 
-#@controller /recognition
+#@controller /recognition;
 class RecognitionController(cc):
 
-	#@post /fromWav
+	#@post /fromWav;
 	@staticmethod
 	def fromWav(server, path, auth):
-		if (auth["role"] > 1):
-			Error.sendCustomError(server, "Unauthorized access", 400)
-			return
-
 		args = cc.readBytes(server)
-
 		if (not args):
-			Error.sendCustomError(server, "No bytes in request", 400)
-			return
+			raise BadRequest("No bytes in request")
 
 		ip = cc.getClientAddress(server)
 		pathToFile = RecognitionController.saveMp3(args)
@@ -44,25 +40,17 @@ class RecognitionController(cc):
 		Logger.info(f"I am saying: {answer}")
 
 		if (answer == ""):
-			Error.sendCustomError(server, "Karla did not hear anything", 500)
-			return
+			raise InternalServerError("Karla did not hear anything")
 
 		data = RecognitionController.createMp3(answer)
 
-		cc.sendResponse(server, (data, 200))
+		return (data, 200, {"Content-type": "text/html"})
 
-	#@post /toMp3
+	#@post /toMp3;
 	@staticmethod
 	def toMp3(server, path, auth):
-		if (auth["role"] > 1):
-			Error.sendCustomError(server, "Unauthorized access", 400)
-			return
-
 		args = cc.readArgs(server)
-
-		if (not cc.validateJson(["TEXT"], args)):
-			Error.sendCustomError(server, "Wrong json structure", 400)
-			return
+		cc.checkJson(["TEXT"], args)
 
 		pathToFile = RecognitionController.findRecordingName()
 
@@ -73,7 +61,7 @@ class RecognitionController(cc):
 			data = f.read()
 
 		os.remove(pathToFile)
-		cc.sendResponse(server, (data, 200))
+		return (data, 200, {"Content-type": "text/html"})
 
 	
 	#METHODS
@@ -83,11 +71,11 @@ class RecognitionController(cc):
 		recording = "recording"
 		fileName = recording + ".wav"
 		index = 0
-		while os.path.exists(os.path.join(ResMan.web(), "recordings", fileName)):
+		while os.path.exists(ResMan.web("recordings", fileName)):
 			index += 1
 			fileName = recording + str(index) + ".wav"
 
-		return os.path.join(ResMan.web(), "recordings", fileName)
+		return ResMan.web("recordings", fileName)
 
 	@staticmethod
 	def saveMp3(bytes):
@@ -98,7 +86,7 @@ class RecognitionController(cc):
 			f.write(bytes)
 
 		if (platform.system() == "Windows"):
-			command = (os.path.join(ResMan.resources(), "ffmpeg", "bin", "ffmpeg") +
+			command = (ResMan.resources("ffmpeg", "bin", "ffmpeg") +
 						f' -i "{pathToFileMp3}" "{pathToFile}"')
 			print(command)
 			subprocess.call(command, shell=False)
