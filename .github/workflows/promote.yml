@@ -1,0 +1,41 @@
+name: Promote
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: checkout repo content
+        uses: actions/checkout@v2 # checkout the repository content to github runner
+        with:
+            ref: main
+
+      - name: setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9' # install the python version needed
+
+      - name: Promote version
+        id: promoteStep
+        run: |
+          output=$(python3 .github/promote.py ${{ github.event.commits[0].message }})
+          echo "::set-output name=commitMessage::$output"
+
+      - name: commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "${{ steps.promoteStep.outputs.commitMessage }}" -a
+          
+      - name: push changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main  
+        
