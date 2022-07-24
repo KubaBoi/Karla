@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  promotion:
     runs-on: ubuntu-latest
     steps:
 
