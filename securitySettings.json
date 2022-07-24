@@ -1,0 +1,73 @@
+{
+    "authentication": {
+        "enabled": false,
+        "types": [
+            {
+                "patern": "(?P<login>[a-zA-Z0-9@.]+):(?P<password>[a-zA-Z0-9@.$_]+)",
+                "validation": "select * from passwords where password = $password$ and login = $login$",
+                "roleId": "select role_id from users where login = $login$",
+                "encoders": {}
+            }
+        ]
+    },
+
+    "roles": {
+        "0": {
+            "value": 0,
+            "name": "Admin"
+        },
+        "1": {
+            "value": 1,
+            "name": "Organiser"
+        },
+        "2": {
+            "value": 2,
+            "name": "Client"
+        }
+    },
+
+    "access": {
+        "/users/login": {
+            "minRoleId": 2
+        },
+        "/users/get": {
+            "minRoleId": 2 
+        },
+        "/events/*": {
+            "minRoleId": 2
+        },
+        "/events/create": {
+            "minRoleId": 1
+        },
+        "/events/update": {
+            "minRoleId": 1
+        },
+        "/events/remove": {
+            "minRoleId": 1
+        },
+        "/clubs/*": {
+            "minRoleId": 2
+        },
+        "/jb/create": {
+            "minRoleId": 1
+        },
+        "/jb/createFromCvs": {
+            "minRoleId": 1
+        },
+        "/jb/createByCvs": {
+            "minRoleId": 1
+        },
+        "/jb/update": {
+            "minRoleId": 2
+        },
+        "/jb/getByClub": {
+            "minRoleId": 2
+        },
+        "/jb/remove": {
+            "minRoleId": 2
+        },
+        "/hotels/create": {
+            "minRoleId": 1
+        }
+    }
+}

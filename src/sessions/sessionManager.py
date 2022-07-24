@@ -1,5 +1,5 @@
 
-from python.sessions.session import Session
+from src.sessions.session import Session
 
 class SessionManager:
 

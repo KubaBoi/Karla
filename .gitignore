@@ -3,3 +3,7 @@ __pycache__
 *.pyc
 logs/*.log
 logs/*.html
+
+adminSettings.json
+secrets.json
+secretPass

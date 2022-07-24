@@ -4,10 +4,10 @@ import platform
 import json
 import subprocess
 
-from cheese.resourceManager import ResMan
-from cheese.Logger import Logger
+from Cheese.resourceManager import ResMan
+from Cheese.Logger import Logger
 
-from python.commands.tools.stringer import Stringer
+from src.commands.tools.stringer import Stringer
 
 class Session:
 
