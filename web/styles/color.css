@@ -1,0 +1,21 @@
+:root {
+    --main-color: #2196F3;
+    --main-text-color: #f5fbef;
+    --light-color: #60a9e4;
+    --lighter-color: #85b8e2;
+    
+    --secondary-color: #bb0c1d;
+    --secondary-light-color: #3a3a3a;
+
+    /* alerts */
+    --ok-color: #4d974d;
+    --ok-light-color: #2f7c2f;
+    --wrong-color: #9e3a3a;
+    --wrong-light-color: #8b1c1c;
+
+    /* badges */
+    --pending: #db9d47;
+    --checked: #3aafb9;
+    --registered: #1a936f;
+    --need-visa: #9e3a3a;
+}

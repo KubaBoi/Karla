@@ -333,8 +333,7 @@ Role = 1
 
 ```POST```
 
-Accepts TEXT and PINDEX and returns logicaly assumed answer.
-PINDEX is index of session doing task. For first time it is -1.
+Accepts ```TEXT``` and ```PINDEX``` and returns logicaly assumed answer. ```PINDEX``` is index of session doing task. For first time it should be -1.
 
 Role = 1
 
