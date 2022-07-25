@@ -1,4 +1,6 @@
 
+import time
+
 from src.sessions.session import Session
 
 class SessionManager:
@@ -8,7 +10,10 @@ class SessionManager:
     @staticmethod
     def doSession(text, ip):
         session = SessionManager.activeSession(ip)
-        if (not session):
+        if (not session or time.time() - session.lastAction > 30):
+            if (session):
+                SessionManager.sessions.remove(session)
+
             session = Session(ip)
             text = session.createSession(text)
             if (text):

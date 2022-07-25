@@ -3,9 +3,11 @@ import os
 import platform
 import json
 import subprocess
+import time
 
 from Cheese.resourceManager import ResMan
 from Cheese.Logger import Logger
+from Cheese.appSettings import Settings
 
 from src.commands.tools.stringer import Stringer
 
@@ -16,6 +18,7 @@ class Session:
         self.faze = 0
         self.ip = ip
         self.command = None
+        self.lastAction = time.time()
 
     # wakes Karla up
     def createSession(self, text):
@@ -28,7 +31,6 @@ class Session:
 
     def findCommand(self, text):
         commands = self.loadCommands()
-        print(text)
 
         for command in commands[1:]:
             if (Stringer.starts(text, command["starters"]) and Stringer.ends(text, [command["ending"].replace("& ", "")])):
@@ -53,7 +55,7 @@ class Session:
         if (platform.system() != "Windows"):
             python = "python3"
 
-        command = f"{python} \"{os.path.join(ResMan.pythonSrc(), 'commands', self.command['name'])}.py\" --faze {self.faze} --data \"{text}\""
+        command = f"{python} \"{ResMan.src('commands', self.command['name'])}.py\" --faze {self.faze} --data \"{text}\" --port {Settings.port}"
         Logger.info(command, silence=False)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
         resp, err = p.communicate()

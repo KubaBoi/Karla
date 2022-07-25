@@ -44,10 +44,10 @@ class RecognitionController(cc):
 		Logger.info(f"I am saying: {answer}")
 
 		if (answer == ""):
-			raise ImTeaPot("Karla did not hear anything")
+			return cc.createResponse({"ANSWER": "NO"}, 204)
 
 		pathToFile = RecognitionController.createMp3(answer)
-		print(pathToFile)
+
 		return cc.createResponse({"ANSWER": pathToFile})
 
 	#@post /toMp3;
@@ -70,13 +70,13 @@ class RecognitionController(cc):
 	# METHODS
 
 	@staticmethod
-	def findRecordingName():
+	def findRecordingName(reg=".wav"):
 		recording = "recording"
-		fileName = recording + ".wav"
+		fileName = recording + reg
 		index = 0
 		while os.path.exists(ResMan.web("recordings", fileName)):
 			index += 1
-			fileName = recording + str(index) + ".wav"
+			fileName = recording + str(index) + reg
 
 		return ResMan.web("recordings", fileName)
 
@@ -117,7 +117,7 @@ class RecognitionController(cc):
 
 	@staticmethod
 	def createMp3(text):
-		pathToFile = RecognitionController.findRecordingName().replace(".wav", ".mp3")
+		pathToFile = RecognitionController.findRecordingName(".mp3")
 
 		tts = gTTS(text)
 		tts.save(pathToFile)

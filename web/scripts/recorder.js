@@ -163,6 +163,9 @@
     }
 
     function start() {
+        let circ = document.getElementById("circle");
+        circ.classList = "circleSpeak";
+
         recording = true;
         // reset the buffers for the new recording
         leftchannel.length = rightchannel.length = 0;
@@ -172,7 +175,10 @@
     }
 
     async function stop() {
-        console.log('Stop')
+        let circ = document.getElementById("circle");
+        circ.classList = "circle";
+
+        console.log('Stop');
         recording = false;
 
 
@@ -226,14 +232,12 @@
             if (this.readyState == 4) {
                 json = JSON.parse(this.responseText);
                 console.log("RESPONSE", nowTime(), json);
-                let aud = document.getElementById("player");
-                aud.innerHTML = "";
-                createElement("source", aud, "", [
-                    {"name": "src", "value": json.ANSWER.replaceAll("\\", "/")},
-                    {"name": "type", "value": "audio/mpeg"}
-                ]);
-                aud.currentTime = 0;
-                aud.play();
+
+                if (json.ANSWER != "NO") {
+                    var audio = new Audio(json.ANSWER.replaceAll("\\", "/"));
+                    audio.load();
+                    audio.play(); 
+                }
             }
         };
 
