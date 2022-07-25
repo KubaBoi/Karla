@@ -234,9 +234,14 @@
                 console.log("RESPONSE", nowTime(), json);
 
                 if (json.ANSWER != "NO") {
+                    circ.classList = "circleSpeak";
                     var audio = new Audio(json.ANSWER.replaceAll("\\", "/"));
                     audio.load();
                     audio.play(); 
+
+                    audio.addEventListener("pause", () => {
+                        circ.classList = "circle";
+                    })
                 }
             }
         };

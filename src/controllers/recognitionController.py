@@ -44,7 +44,7 @@ class RecognitionController(cc):
 		Logger.info(f"I am saying: {answer}")
 
 		if (answer == ""):
-			return cc.createResponse({"ANSWER": "NO"}, 204)
+			return cc.createResponse({"ANSWER": "NO"})
 
 		pathToFile = RecognitionController.createMp3(answer)
 
