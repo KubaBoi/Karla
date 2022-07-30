@@ -24,7 +24,7 @@ from src.sessions.sessionManager import SessionManager
 #@controller /recognition;
 class RecognitionController(cc):
 
-	#@post /fromWav;
+	#@post /fromWavFrontEnd;
 	@staticmethod
 	def fromWav(server, path, auth):
 		#args = cc.readBytes(server)
@@ -49,6 +49,29 @@ class RecognitionController(cc):
 		pathToFile = RecognitionController.createMp3(answer)
 
 		return cc.createResponse({"ANSWER": pathToFile})
+
+	#@post /fromWav;
+	@staticmethod
+	def fromWav(server, path, auth):
+		args = cc.readBytes(server)
+		if (not args):
+			raise BadRequest("No bytes in request")
+
+		ip = cc.getClientAddress(server)
+		pathToFile = RecognitionController.saveMp3(args)
+
+		text = RecognitionController.recognize(pathToFile)
+		Logger.info(f"I have heard: {text}")
+
+		answer = SessionManager.doSession(text, ip)
+		Logger.info(f"I am saying: {answer}")
+
+		if (answer == ""):
+			raise InternalServerError("Karla did not hear anything")
+
+		data = RecognitionController.createMp3(answer)
+
+		return (data, 200, {"Content-type": "text/html"})
 
 	#@post /toMp3;
 	@staticmethod
@@ -117,12 +140,17 @@ class RecognitionController(cc):
 
 	@staticmethod
 	def createMp3(text):
-		pathToFile = RecognitionController.findRecordingName(".mp3")
+		pathToFile = RecognitionController.findRecordingName().replace(".wav", ".mp3")
 
+		
 		tts = gTTS(text)
 		tts.save(pathToFile)
 
-		return ResMan.getRelativePathFrom(pathToFile, ResMan.web())
+		with open(pathToFile, "rb") as f:
+			data = f.read()
+
+		os.remove(pathToFile)
+		return data
 
 	@staticmethod
 	def deal_post_data(server):
