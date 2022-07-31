@@ -17,6 +17,11 @@
 - [/understand](#3-understand)
     - [/text](#31-text)
 
+## Access
+
+- ```/recognition/fromWav``` - returns text
+- ```/understand/text``` - returns answer for text from up command
+
 ## RestApi
 
 If there is not an ```Accepts...``` paragraph in endpoint paragraph it means that endpoint does not accepts anything. 
