@@ -3,13 +3,35 @@ import math
 import random
 
 class neuron:
-    def __init__(self, layer: int, value=None) -> None:
+    def __init__(self, layer, next_layer_size, value=None) -> None:
         self.layer = layer
-        self.value = random.random() if value is None else value
-        self.weight = random.random()
+        self.value = 0 if value is None else value
+        self.bias = random.random() 
         self.active = False
 
-    def round(self) -> None:
-        
-        self.value = math.ceil(self.value * 1000) / 1000
-        self.weight = math.ceil(self.weight * 1000) / 1000
+        self.weights = []
+        for i in range(next_layer_size):
+            self.weights.append(random.random())
+
+    def round(self, dec=1000) -> None:     
+        self.value = math.ceil(self.value * dec) / dec
+        for i, w in enumerate(self.weights):
+            self.weights[i] = math.ceil(w * dec) / dec
+
+    def decide_activity(self) -> None:
+        """
+        Decides if node is activated or not
+        """
+        self.active = self.value - self.bias >= 0
+
+    def set_next_layer(self, neurons) -> None:
+        """
+        Adds itselfes influence at next neurons into their add_value
+        """
+        self.decide_activity()
+        if (not self.active):
+            return
+        for i, next_neur in enumerate(neurons[self.layer + 1]):
+            if (next_neur.add_value is None):
+                next_neur.add_value = 0
+            next_neur.add_value += self.weights[i] * self.value

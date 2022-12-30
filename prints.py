@@ -7,14 +7,14 @@ class prints:
 
         Example:
         longlonglong    # 12
-        short        # 5 -> 3 + 5 + 4 = 12 
+            short       # 5 -> 4 + 5 + 3 = 12 
         """
         spaces_count = len(long) - len(short)
         half_spaces = spaces_count // 2
         pre = half_spaces * char
         post = pre
         if (spaces_count % 2 == 1):
-            post += char
+            pre += char
         return f"{pre}{short}{post}"
 
     @staticmethod
@@ -54,7 +54,7 @@ class prints:
         edges_str = ""
         neurs_str = ""
         for neuron in layer:
-            e_str = prints.fit_in_spaces(minimal_str, f"{neuron.weight}")
+            e_str = prints.fit_in_spaces(minimal_str, f"{neuron.bias}")
             edges_str += f" | {e_str}"
 
             b_str = str(neuron.value)
