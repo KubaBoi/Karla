@@ -1,51 +1,36 @@
 
-import random
+import numpy as np
 
 from prints import prints
-from neuron import neuron
-from network import network
 
-def generate_random_data(length, wrong=False) -> tuple:
-    data = []
-    for i in range(length):
-        if (wrong): data.append(0)
-        else: data.append(random.randint(0, 1))
-    if (not wrong): data[0] = 1
-    return data
+np.random.seed(10)
 
-number = [
-    0, 0, 1, 0, 0,
-    0, 1, 1, 0, 0,
-    0, 0, 1, 0, 0,
-    0, 0, 1, 0, 0,
-    0, 0, 1, 0, 0
-]
+input_size = 1 # n
+output_size = 2 # k
+data_size = 1
+layer_size = 2 # n || k
+layer_count = 2 # iterations
 
-random.seed(10)
+values = [np.zeros((input_size, 1))]
+weights = []
+weights.append(np.random.rand(layer_size, input_size))
 
-output_length = 2
-iterations = 2
-data_length = 1
-layer_size = 7
-layer_count = 7
+biases = []
 
-netw = network(output_length, layer_count, layer_size)
+for i in range(layer_count - 1):
+    weights.append(np.random.rand(layer_size, layer_size))
+    biases.append(np.random.rand(layer_size, 1))
+    
+weights.append(np.random.rand(output_size, layer_size))
+biases.append(np.random.rand(layer_size, 1))
+biases.append(np.random.rand(output_size, 1))
 
-prints.print_network(netw.neurons)
-data_sets = [True, False]
+for wgh, bia in zip(weights, biases):
+    val = values[-1]
+    values.append(wgh.dot(val) + bia)
 
-for it, d in enumerate(data_sets):
-    data = generate_random_data(data_length, d)
-    right_answer = int(not d)
-    netw.create_first_layer(data, layer_size)
-    for i in range(iterations):
-        print("\n", 5*"==", f"Learning iteration {it}.{i} - {not d}", 5*"==")
-        netw.calc_neurons()
-        errors = netw.calc_errors(right_answer)
-        prints.print_network(netw.neurons, errors, right_answer)
-        netw.rework_network(errors, right_answer)
+prints.list_matrix(values, "values:")
+prints.list_matrix(weights, "weights:")
+prints.list_matrix(biases, "biases:")
 
-print("\n", 10*"==", "Learning end", 10*"==")
 
-print("")
-prints.print_layer(netw.neurons, -1)
