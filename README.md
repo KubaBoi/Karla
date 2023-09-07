@@ -8,3 +8,4 @@
 - device show answer as text
 - if shouldSpeak == true
   - device send answer as text to be translated into sound file and device play it
+
