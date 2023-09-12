@@ -1,0 +1,250 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/JAKUBANDERLE/Karla/1.0.0
+info:
+  version: "1.0.0"
+  title: Karla
+  description: >
+    The API for the Karla voice assistant.<br><br>
+    Most of endpoints have binary version, which means it accepts parameters
+    in request body as byte sequence and returns byte sequence.
+    Data are expected to be in the same order as JSON API.<br> 
+    There is 2 bytes value of length before each string 
+    and it needs to end with zero which is counted into length value.<br>
+    To access binary version of endpoint there need to be /bin before endpoint path.
+    (/understand/text -> /bin/understand/text)
+paths:
+  /accounts:
+    get:
+      tags:
+        - Accounts
+      description: Returns all registered accounts
+      operationId: getAccounts
+      responses:
+        '200':
+          description: All accounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountDTO'
+  /accounts/create:
+    post:
+      tags:
+        - Accounts
+      description: Create new account with name
+      operationId: create
+      responses:
+        '200':
+          description: Successfully created account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAccountDTO'
+  /accounts/{id}:
+    get:
+      tags:
+        - Accounts
+      description: Return one account by ID
+      operationId: getAccount
+      parameters:
+        - in: path
+          name: id
+          description: Account ID
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Found account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountDTO'
+        '404':
+          description: Account not found
+  /devices:
+    get:
+      tags:
+        - Devices
+      description: Return all devices registered to accountId
+      operationId: getDevices
+      parameters:
+        - in: query
+          name: accountId
+          description: Account ID
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: All devices
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeviceDTO'
+  /devices/register:
+    post:
+      tags:
+        - Devices
+      description: Register new device to account
+      operationId: registerDevice
+      responses:
+        '200':
+          description: Device registered
+        '409':
+          description: Device is already registered
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceDTO'
+  /recognition/fromWav:
+    post:
+      tags:
+        - Recognition
+      description: Translate wav format to text
+      operationId: fromWav
+      responses:
+        '200':
+          description: Return translated text
+          content:
+            text/plain:
+              schema:
+                type: string
+        '400':
+          description: No bytes in request
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+              format: byte
+  /recognition/toMp3:
+    post:
+      tags:
+        - Recognition
+      description: Translate text to mp3 format
+      operationId: toMp3
+      responses:
+        '200':
+          description: Return translated sound
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: byte
+        '400':
+          description: No text to be translated
+      requestBody:
+        content:
+          text/plain:
+            schema:
+              type: string
+  /understand/text:
+    post:
+      tags:
+        - Understand
+      description: Accept request text and do session
+      operationId: textUnderstanding
+      responses:
+        '200':
+          description: Session created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnswerDTO'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RequestDTO'
+components:
+  schemas:
+    AccountDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint32
+        name:
+          type: string
+    CreateAccountDTO:
+      type: object
+      properties:
+        name:
+          type: string
+    DeviceDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          description: MAC address of device
+        accountId:
+          type: integer
+          format: uint32
+    AnswerDTO:
+      type: object
+      properties:
+        text:
+          type: string
+        shouldSpeak:
+          type: boolean
+          format: char
+      description: Text to be spoken, send from bc
+    RequestDTO:
+      type: object
+      properties:
+        deviceId:
+          type: string
+        text:
+          type: string
+      description: Translated text from sound file, send from device
+    EventDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: uint32
+        accountId:
+          type: integer
+          format: uint32
+        text:
+          type: string
+          description: Text to be spoken
+        activateIn:
+          type: integer
+          format: uint64
+          nullable: true
+          description: Time in seconds until speak event
+        activationTime:
+          type: string
+          nullable: true
+          format: date-time
+        eventType:
+          type: integer
+          description: EventTypeEnum
+
+    EventTypeEnum:
+      type: integer
+      format: uint8
+      enum: [0, 1, 2, 3, 4, 5]
+      description: >
+        values:
+          * 0 - OneTime
+          * 1 - Hourly
+          * 2 - Daily
+          * 3 - Weekly
+          * 4 - Monthly
+          * 5 - Annual
