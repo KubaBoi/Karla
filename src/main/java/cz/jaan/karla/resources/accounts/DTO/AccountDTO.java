@@ -1,11 +1,9 @@
 package cz.jaan.karla.resources.accounts.DTO;
 
 import cz.jaan.karla.resources.GenericDTO;
+import cz.jaan.karla.resources.accounts.Account;
+import cz.jaan.karla.tools.ByteTools;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,18 +12,21 @@ public class AccountDTO extends GenericDTO {
     private Integer id;
     private String name;
 
-    public AccountDTO() {}
-
-    public AccountDTO(byte[] byteArr) {
-
+    public AccountDTO() {
     }
 
-    public byte[] toByteArray() throws IOException {
-        List<Byte> byteList = new ArrayList<>(4 + 1 + name.length() + 1);
-        addIntToList(byteList, id, 4);
-        addStringToList(byteList, name);
+    public AccountDTO(Account account) {
+        this.id = account.getId();
+        this.name = account.getName();
+    }
 
-        return super.toByteArray(byteList);
+    @Override
+    public byte[] toByteArray() {
+        List<Byte> byteList = new ArrayList<>(4 + 2 + name.length() + 1);
+        ByteTools.addIntToList(byteList, id, 4);
+        ByteTools.addStringToList(byteList, name);
+
+        return ByteTools.toByteArray(byteList);
     }
 
     public String getName() {

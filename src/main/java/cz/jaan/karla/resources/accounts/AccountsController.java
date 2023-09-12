@@ -1,49 +1,38 @@
 package cz.jaan.karla.resources.accounts;
 
+import cz.jaan.karla.resources.GenericDTO;
 import cz.jaan.karla.resources.accounts.DTO.AccountDTO;
 import cz.jaan.karla.resources.accounts.DTO.CreateAccountDTO;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 public class AccountsController {
 
+    @Autowired
+    private AccountService accountService;
+
     @GetMapping("/accounts")
-    public ResponseEntity<AccountDTO> accounts() {
-
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setId(0);
-        accountDTO.setName("Ahoj");
-
-        return new ResponseEntity<>(accountDTO, HttpStatus.I_AM_A_TEAPOT);
+    public @ResponseBody List<AccountDTO> accounts() {
+        return accountService.getAccounts();
     }
 
     @GetMapping("/bin/accounts")
-    public ResponseEntity<byte[]> accountsBin() throws IOException {
-
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setId(15);
-        accountDTO.setName("Ahoj");
-
-        return new ResponseEntity<>(accountDTO.toByteArray(), HttpStatus.I_AM_A_TEAPOT);
+    public @ResponseBody byte[] accountsBin() throws IOException {
+        List<AccountDTO> accountDTOS = accountService.getAccounts();
+        return GenericDTO.listDTOsToBytes(accountDTOS);
     }
 
     @PostMapping("/accounts/create")
-    public ResponseEntity<AccountDTO> createAccount(@RequestBody CreateAccountDTO newAccount) {
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setId(0);
-        accountDTO.setName(newAccount.getName());
-        return new ResponseEntity<>(accountDTO, HttpStatus.OK);
+    public @ResponseBody AccountDTO createAccount(@RequestBody CreateAccountDTO payload) {
+        return accountService.postCreateAccount(payload);
     }
 
     @GetMapping("/accounts/{accountId}")
-    public ResponseEntity<AccountDTO> getAccount(@PathVariable Integer accountId) {
-        AccountDTO accountDTO = new AccountDTO();
-        accountDTO.setId(accountId);
-        accountDTO.setName("name");
-        return new ResponseEntity<>(accountDTO, HttpStatus.OK);
+    public @ResponseBody AccountDTO getAccount(@PathVariable Integer accountId) {
+        return accountService.getAccount(accountId);
     }
 }

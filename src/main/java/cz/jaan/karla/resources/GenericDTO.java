@@ -1,29 +1,36 @@
 package cz.jaan.karla.resources;
 
+import cz.jaan.karla.tools.ByteTools;
+
 import java.io.IOException;
-import java.nio.ByteBuffer;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GenericDTO {
 
-    protected byte[] toByteArray(List<Byte> byteList) throws IOException {
-        byte[] byteArr = new byte[byteList.size()];
-        for (int i = 0; i < byteList.size(); i++)
-            byteArr[i] = byteList.get(i);
-        return byteArr;
+    /**
+     * Convert List of DTOs to primitive byte array<br>
+     * with 2 byte size value at start od byte seq
+     */
+    public static byte[] listDTOsToBytes(List<? extends GenericDTO> DTOs) throws IOException {
+        List<Byte> byteList = new ArrayList<>();
+        ByteTools.addShortToList(byteList, DTOs.size());
+        for (GenericDTO DTO : DTOs)
+            ByteTools.addByteArrToList(byteList, DTO.toByteArray());
+
+        return ByteTools.toByteArray(byteList);
     }
 
-    protected void addIntToList(List<Byte> byteList, Integer value, int byteCount) {
-        byte[] valueArr = ByteBuffer.allocate(byteCount).putInt(value).array();
-        for (int i = 0; i < byteCount; i++)
-            byteList.add(valueArr[i]);
+    public byte[] toByteArray() {
+        return null;
     }
 
-    protected void addStringToList(List<Byte> byteList, String value) {
-        int length = value.length();
-        byteList.add((byte) (length + 1));
-        for (int i = 0; i < length; i++)
-            byteList.add((byte) value.charAt(i));
-        byteList.add((byte) 0);
-    }
+    /*public static List<? extends GenericDTO> toDTOList(
+            Iterable<? extends GenericEntity> entites,
+            Class<? extends GenericDTO> DTOClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        List<? extends GenericDTO> DTOs = new ArrayList<>();
+        for (GenericEntity entity : entites)
+            DTOs.add(DTOClass.getDeclaredConstructor(GenericEntity.class).newInstance(entity));
+        return DTOs;
+    }*/
 }

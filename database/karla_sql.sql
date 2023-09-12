@@ -2,6 +2,29 @@
 -- Please log an issue at https://redmine.postgresql.org/projects/pgadmin4/issues/new if you find any bugs, including reproduction steps.
 BEGIN;
 
+-- Database: karla
+
+-- DROP DATABASE IF EXISTS karla;
+
+CREATE DATABASE karla
+    WITH
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'en_US.UTF-8'
+    LC_CTYPE = 'en_US.UTF-8'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
+
+CREATE SEQUENCE IF NOT EXISTS public.account_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+ALTER SEQUENCE public.account_seq
+    OWNER TO postgres;
 
 CREATE TABLE IF NOT EXISTS public.account
 (
@@ -41,5 +64,11 @@ ALTER TABLE IF EXISTS public.event
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
+
+CREATE TYPE public.event_type AS ENUM
+    ('OneTime', 'Hourly', 'Daily', 'Weekly', 'Monthly', 'Annual');
+
+ALTER TYPE public.event_type
+    OWNER TO postgres;
 
 END;
