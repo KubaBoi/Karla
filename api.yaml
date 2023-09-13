@@ -8,9 +8,10 @@ info:
   title: Karla
   description: >
     The API for the Karla voice assistant.<br><br>
-    Most of endpoints have binary version, which means it accepts parameters
+    Some of endpoints have binary version, which means it accepts parameters
     in request body as byte sequence and returns byte sequence.
     Data are expected to be in the same order as JSON API.<br> 
+    If there is in-path parameter, then it is still in the path (not in body)<br>
     There is 2 bytes value of length before each string 
     and it needs to end with zero which is counted into length value.<br>
     To access binary version of endpoint there need to be /bin before endpoint path.
@@ -171,14 +172,21 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateEventDTO'
-  /events/doing:
+  /events/doing/{device_id}:
     post:
       tags:
         - Events
       description: >
         Devices would call this endpoint when it should be done
-        and until it is done (Jakmile se ma event provest)
+        and until it is done (Jakmile se ma event provest) - BIN
       operationId: eventDoing
+      parameters:
+        - in: path
+          name: device_id
+          description: Device ID
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Return active event_id
@@ -310,8 +318,6 @@ components:
         eventId:
           type: integer
           format: uint32
-        deviceId:
-          type: string
     EventTypeEnum:
       type: integer
       format: uint8

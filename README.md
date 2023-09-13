@@ -20,10 +20,11 @@
 - aktualni event je prvni pokud jsou razeny podle activation_time vzestupne
   - event neni hotov, dokud jedno ze zarizeni neda vedet, ze event provedlo
     - potom [Aktualizace eventu](#aktualizace-eventu)
-  - kazde zarizeni bude mit jedinecnou priority (napr:)
-    - 0 pocitac
-    - 1 hodinky
-    - 2 mobil
+- pokud je event v minulosti, jeho activateIn = 0
+- kazde zarizeni bude mit jedinecnou priority (napr:)
+  - 0 pocitac
+  - 1 hodinky
+  - 2 mobil
 
 ## Jakmile se ma event provest
   
@@ -35,7 +36,7 @@
     - vraci se aktualni event_id
   - pocet vterin od zacatku eventu // DEVICE_TIME_DELAY=5 >= device_id.priority 
     - event je hotov, provadi se [Aktualizace eventu](#aktualizace-eventu)
-    - vraci se aktualni event_id
+    - vraci se aktualni event_id a HTTP status 201
       - v tuhle chvili dane device promluvi
   - else
     - vraci se stejne event_id, jake bylo v requestu
