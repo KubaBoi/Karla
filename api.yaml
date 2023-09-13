@@ -20,7 +20,7 @@ paths:
     get:
       tags:
         - Accounts
-      description: Returns all registered accounts
+      description: Returns all registered accounts - BIN
       operationId: getAccounts
       responses:
         '200':
@@ -72,6 +72,7 @@ paths:
                 $ref: '#/components/schemas/AccountDTO'
         '404':
           description: Account not found
+
   /devices:
     get:
       tags:
@@ -110,27 +111,114 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/DeviceDTO'
-  /recognition/fromWav:
-    post:
+
+  /events/{account_id}:
+    get:
       tags:
-        - Recognition
-      description: Translate wav format to text
-      operationId: fromWav
+        - Events
+      description: Return events by account_id
+      operationId: getAccountsEvents
+      parameters:
+        - in: path
+          name: account_id
+          description: Account ID
+          required: true
+          schema:
+            type: integer
+            format: int32
       responses:
         '200':
-          description: Return translated text
+          description: List of Events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventDTO'
+        '400':
+          description: Account not found
+  /events/getActive/{device_id}:
+    get:
+      tags:
+        - Events
+      description: Return event_id of active event - BIN
+      operationId: getActiveEvent
+      parameters:
+        - in: path
+          name: device_id
+          description: Device ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Active event ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventDTO'
+  /events/create:
+    post:
+      tags:
+        - Events
+      description: Create new event
+      operationId: createEvent
+      responses:
+        '200':
+          description: Event created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventDTO'
+  /events/doing:
+    post:
+      tags:
+        - Events
+      description: >
+        Devices would call this endpoint when it should be done
+        and until it is done (Jakmile se ma event provest)
+      operationId: eventDoing
+      responses:
+        '200':
+          description: Return active event_id
           content:
             text/plain:
               schema:
-                type: string
-        '400':
-          description: No bytes in request
+                type: integer
+                format: uint32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoingEventDTO'
+
+
+  /sessions/do/voice/{device_id}:
+    post:
+      tags:
+        - Sessions
+      description: Accept request sound bytes and do session
+      operationId: sessionDo
+      parameters:
+        - in: path
+          name: device_id
+          description: Device ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: >
+            Session done
+            Device should ask for active event
       requestBody:
         content:
           text/plain:
             schema:
               type: string
-              format: byte
+              format: byte[]
+
   /recognition/toMp3:
     post:
       tags:
@@ -152,24 +240,6 @@ paths:
           text/plain:
             schema:
               type: string
-  /understand/text:
-    post:
-      tags:
-        - Understand
-      description: Accept request text and do session
-      operationId: textUnderstanding
-      responses:
-        '200':
-          description: Session created
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AnswerDTO'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/RequestDTO'
 components:
   schemas:
     AccountDTO:
@@ -194,23 +264,6 @@ components:
         accountId:
           type: integer
           format: uint32
-    AnswerDTO:
-      type: object
-      properties:
-        text:
-          type: string
-        shouldSpeak:
-          type: boolean
-          format: char
-      description: Text to be spoken, send from bc
-    RequestDTO:
-      type: object
-      properties:
-        deviceId:
-          type: string
-        text:
-          type: string
-      description: Translated text from sound file, send from device
     EventDTO:
       type: object
       properties:
@@ -235,7 +288,30 @@ components:
         eventType:
           type: integer
           description: EventTypeEnum
-
+    CreateEventDTO:
+      type: object
+      properties:
+        accountId:
+          type: integer
+          format: uint32
+        text:
+          type: string
+          description: Text to be spoken
+        activationTime:
+          type: string
+          nullable: true
+          format: date-time
+        eventType:
+          type: integer
+          description: EventTypeEnum
+    DoingEventDTO:
+      type: object
+      properties:
+        eventId:
+          type: integer
+          format: uint32
+        deviceId:
+          type: string
     EventTypeEnum:
       type: integer
       format: uint8

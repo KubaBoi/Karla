@@ -1,39 +1,83 @@
 # Karla
 
-- device listen and send sound file to bc
-  - bc return text from speech
-- device send the text to bc to understanding
-  - bc create session and return answer as text and boolean (shouldSpeak)
-  - bc also send this answer and shouldSpeak to other connected devices (wip... there will be only one device and shouldSpeak will always be true)
-- device show answer as text
-- if shouldSpeak == true
-  - device send answer as text to be translated into sound file and device play it
+- zarizeni nahraje zvuk
+- posle zvuk na preklad
+- zarizeni si zaktualizuje event, protoze:
+  - backend zpracoval zvuk, prelozil ho a vytvoril event s now() a textem co ma byt recen
+  - potom se pokracuje na [Jakmile se ma event provest](#jakmile-se-ma-event-provest)
+  - zaroven vytvoril i session, pokud byla potreba
 
-- zarizeni se periodicky bude dotazovat pomoci event_id, jestli je jeho next event aktualni
-  - bc posle jeden bajt 
-  - pokud neni aktualni, tak zaktualizuje
+## Aktualizace eventu v zarizeni
+
+- zarizeni se periodicky bude dotazovat, jestli je jeho event aktualni
+- v pripade hodinek se dotaz bude posilat vzdy po:
+  - poslani hlasu
+  - provedeni eventu
+  - probuzeni ??
+
+## Event
 
 - aktualni event je prvni pokud jsou razeny podle activation_time vzestupne
-- event neni hotov, dokud jedno ze zarizeni neda vedet, ze event provedlo
-  - potom aktualizace eventu
-- kazde zarizeni bude mit jedinecnou priority (napr:)
-  - 0 pocitac
-  - 1 hodinky
-  - 2 mobil
+  - event neni hotov, dokud jedno ze zarizeni neda vedet, ze event provedlo
+    - potom [Aktualizace eventu](#aktualizace-eventu)
+  - kazde zarizeni bude mit jedinecnou priority (napr:)
+    - 0 pocitac
+    - 1 hodinky
+    - 2 mobil
 
-- jakmile se ma event provest
-  - vsechna zarizeni (ktera mohou = jsou zapnuta) 
-    - zobrazi text + vibrace
-    - requesty (pravidelne) s vlastnim device_id a event_id
-  - pokud backendu prijde request s device_id a event_id
-    - pokud event_id != aktualni_event_id
-      - vraci se aktualni event_id
-    - pocet vterin od zacatku eventu // DEVICE_TIME_DELAY=5 >= device_id.priority 
-      - event je hotov, provadi se aktualizace eventu
-      - vraci se aktualni event_id
-        - v tuhle chvili dane device promluvi
-    - else
-      - vraci se stejne event_id, jake bylo v requestu
+## Jakmile se ma event provest
+  
+- vsechna zarizeni (ktera mohou = jsou zapnuta) 
+  - zobrazi text + vibrace
+  - requesty (pravidelne) s vlastnim device_id a event_id
+- pokud backendu prijde request s device_id a event_id
+  - pokud event_id != aktualni_event_id
+    - vraci se aktualni event_id
+  - pocet vterin od zacatku eventu // DEVICE_TIME_DELAY=5 >= device_id.priority 
+    - event je hotov, provadi se [Aktualizace eventu](#aktualizace-eventu)
+    - vraci se aktualni event_id
+      - v tuhle chvili dane device promluvi
+  - else
+    - vraci se stejne event_id, jake bylo v requestu
 
-- aktualizace eventu
-  - prenastavi se jeho cas/smaze se, podle typu
+## Aktualizace eventu
+  
+- prenastavi se jeho cas/smaze se, podle typu
+
+## Session
+
+- kazdy account muze mit jenom jednu session
+- faze dotazu (return v tomhle pripade znamena vytvoreni eventu now() s textem)
+  - "hey karla" (account nema zadnou session)
+    - zalozi se session kde 
+      - session.command = null
+      - session.faze = 0
+      - session.account_id = ...
+    - return - "what do you need"
+  - pokud session.command == null
+    - command starter + ending - "set timer for & minutes"
+      - pokud odpovida nejakemu commandu, tak 
+        - session.command = command_name
+      - jinak return - "I did not understand"
+        - session se maze
+  - dokud session.faze < command.fazeCount
+    - provola se command
+    - jinak se session maze
+    
+## Command
+
+- command je python script s rozhranim:
+  - --account account.id
+  - --faze faze commandu
+  - --data rozpoznany text 
+    - pri faze==0 se ocekavaji data vyparsovane z regexu, jinak se regex provadi az ve scriptu
+  - --port port aplikace
+- command s aplikaci komunikuje pres http provolavanim endpointu na vytvoreni eventu (mluveni)
+- zaroven je to zaznam v tabulce command
+  - fazeCount - pocet fazi
+  - command - jmeno python scriptu (PK)
+  - starters - text array (regex)
+  - endings - text array (regex)
+    - starters a endings se spoji dohromady a porovnaji se s mluvenym textem (to provadi aplikace)
+    - potom (protoze je to prvni faze) se vlozi vyparsovana data
+    
